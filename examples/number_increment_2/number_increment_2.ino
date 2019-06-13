@@ -1,5 +1,5 @@
 /*
- * display_scroll_string.ino
+ * number_increment_2.ino
  * Driver for digital tube.
  *  
  * Copyright (c) 2018 Seeed Technology Co., Ltd.
@@ -29,19 +29,16 @@
  * THE SOFTWARE.
  */
 #include <Wire.h>
+#include "grove_dual_alphanumeric_display.h"
 
-//#define DUAL_NUMERIC
+/*********************************************************/
+/*****NOTICE : This example only for dual_alphanumeric****/
+/*********************************************************/
 
-#ifdef DUAL_NUMERIC
-    #include "grove_dual_alphanumeric_display.h"
-    #define NUMERIC_I2C_ADDR  0x70
-    Digital_Tube2 tube;
-#else
-    #include "grove_quad_alphanumeric_display.h"
-    #define NUMERIC_I2C_ADDR  0x71
-    Digital_Tube4 tube;
-#endif
+#define NUMERIC_I2C_ADDR  0x70
 
+Digital_Tube2 tube;
+char hex_str[255] = {0};
 
 void setup()
 {
@@ -49,12 +46,39 @@ void setup()
     tube.init(NUMERIC_I2C_ADDR);
     tube.setBrightness(15);
     tube.setBlinkRate(BLINK_OFF);
+    
 }
 
+char* numToHexString(unsigned int num)
+{
+    if(num <= 0xf){
+        sprintf(hex_str,"0%x",num);
+        for(int i=0;i<2;i++)
+        {
+            if(hex_str[i] >= 'a' && hex_str[i] <= 'z')
+            {
+                hex_str[i] -=0x20;
+            }
+        }
+        return hex_str;
+    }
+    sprintf(hex_str,"%x",num);
+    for(int i=0;i<2;i++)
+    {
+        if(hex_str[i] >= 'a' && hex_str[i] <= 'z')
+        {
+            hex_str[i] -=0x20;
+        }
+    }
+    return hex_str;
+}
 
 
 void loop()
 {
-    tube.displayString("ABCDEFGHJIYZ",500);
-    delay(1000);
+    for(int i=0;i<0xff;i++)
+    {
+        tube.displayString(numToHexString(i),0);
+        delay(300);
+    }
 }

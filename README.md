@@ -1,18 +1,37 @@
-# Grove - Four Digital Tubes Display
-***
+# Grove - alphanumeric Digital Tubes Display
+
+***  
+
 ## Introduction of sensor
-Grove - Four Digital Tubes Display,it can display number,and scrolling displaying.
+Grove - alphanumeric Digital Tubes Display,Based on HT16K33,it can display number,and scrolling displaying.
+
+**Support dual(two tubes)&qual(four tubes) alphanumeric Digital Tubes simultaneously.**
+
 ***
+
 ## Usage:
 Download all the source files.
 There are four examples for user to use.
->* **example/display_custom/display_custom.ino**.
->* **example/display_scroll_string/display_scroll_string.ino**:Display scrolling string which longer than 4.
->* **example/display_scroll_number/display_scroll_number.ino**:Display scrolling number which bigger than 9999.
->* **example/display_basic/display_basic.ino**:Basic static display demo.
-
+>* **example/display_custom_4/display_custom_4.ino**.Only support  for qual(four tubes) alphanumeric Digital Tubes.
+>* **example/display_scroll_string/display_scroll_string.ino**:Display scrolling string which longer than 2(4).Support dual(two tubes)&qual(four tubes) alphanumeric Digital Tubes simultaneously
+>* **example/display_scroll_number/display_scroll_number.ino**:Display scrolling number which bigger than 99(9999).Support dual(two tubes)&qual(four tubes) alphanumeric Digital Tubes simultaneously.
+>* **example/display_basic/display_basic.ino**:Basic static display demo.Support dual(two tubes)&qual(four tubes) alphanumeric Digital Tubes simultaneously
+>* **example/number_increment_2/number_increment_2.ino**,Only support  for dual(two tubes) alphanumeric Digital Tubes.
 
 ----
+
+## select type of alphanumeric Digital Tubes Display
+**You can switch dual/qual alphanumeric Digital Tubes Display by change the micro <DUAL_NUMERIC> in every example.**   
+```
+//#define DUAL_NUMERIC
+```  
+
+comment it ,using qual alphanumeric Digital Tubes Display,otherwise ,using dual alphanumeric Digital Tubes Display.
+
+**defaule using qual alphanumeric Digital Tubes Display**
+
+***
+
 
 This software is written by Jerry Yip for seeed studio and is licensed under [The MIT License](http://opensource.org/licenses/mit-license.php). Check License.txt for more information.<br>
 

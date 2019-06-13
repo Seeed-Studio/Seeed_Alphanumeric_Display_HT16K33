@@ -1,5 +1,5 @@
 /*
- * display_custom.ino
+ * display_custom_4.ino
  * Example for digital tube.
  *  
  * Copyright (c) 2018 Seeed Technology Co., Ltd.
@@ -29,35 +29,36 @@
  * THE SOFTWARE.
  */
 #include <Wire.h>
-#include "grove_dual_alphanumeric_display.h"
 
-extern uint16_t g_display_font[];
 
-Digital_Tube tube4;
+/*********************************************************/
+/*****NOTICE : This example only for qual_alphanumeric****/
+/*********************************************************/
+#include "grove_quad_alphanumeric_display.h"
+#define NUMERIC_I2C_ADDR  0x71
 
-#define SHINE_INTERVAL  1000
-
+Digital_Tube4 tube;
 
 
 void setup()
 {
     Wire.begin();
-    tube4.init();
-    tube4.setBrightness(15);
-    tube4.setBlinkRate(BLINK_1HZ);
+    tube.init(NUMERIC_I2C_ADDR);
+    tube.setBrightness(15);
+    tube.setBlinkRate(BLINK_1HZ);
     
 }
 
 
 void displayCustom()
 {
-    tube4.clearBuf();
-    tube4.setTubeSingleChar(FIRST_TUBE,'t');
-    tube4.setTubeSingleChar(SECOND_TUBE,'T');
-    tube4.setTubeSingleNum(THIRD_TUBE,5);
-    tube4.setTubeSingleNum(FOURTH_TUBE,5);
-    tube4.setPoint(true,true);
-    tube4.display();
+    tube.clearBuf();
+    tube.setTubeSingleChar(FIRST_TUBE,'t');
+    tube.setTubeSingleChar(SECOND_TUBE,'T');
+    tube.setTubeSingleNum(THIRD_TUBE,5);
+    tube.setTubeSingleNum(FOURTH_TUBE,5);
+    tube.setPoint(true,true);
+    tube.display();
 }
 
 void loop()

@@ -1,6 +1,6 @@
 /* 
- * Grove_LED_Matrix_Driver_HT16K33.h
- * A library for Grove - LED Matrix Driver(HT16K33 with 8x8 LED Matrix)
+ * grove_dual_alphanumeric_display.cpp
+ * A library for Grove - dual_alphanumeric_display
  *
  * Copyright (c) 2018 seeed technology inc.
  * Website    : www.seeed.cc
@@ -8,12 +8,6 @@
  * Create Time: 2018-06
  * Version    : 0.1
  * Change Log :
- * Copyright (c) 2018 seeed technology inc.
- * Website    : www.seeed.cc
- * Author     : downey 
- * Create Time: 2018-06
- * Version    : 1.1
- * Change Log :for digital tube development.
  *
  * The MIT License (MIT)
  *
@@ -37,32 +31,9 @@
  */
 
 #include "grove_dual_alphanumeric_display.h"
-#include "Wire.h"
-
-HT16K33::HT16K33()
-{
-}
-
-void HT16K33::init(uint8_t addr)
-{
-    _addr = addr;
-    // turn on oscillator
-    writeBytes(_addr, 0x21, 0, (uint8_t *)NULL);
-}
-
-/*brightness:0-15*/
-void HT16K33::setBrightness(uint8_t brightness)
-{
-    writeBytes(_addr, (0xE0 | brightness), 0, (uint8_t *)NULL);
-}
 
 
-void HT16K33::setBlinkRate(blink_type_t blink_type)
-{
-    writeBytes(_addr, (0x80 | 0x01 | (blink_type << 1)), 0, (uint8_t *)NULL);
-}
-
-Digital_Tube::Digital_Tube()
+Digital_Tube2::Digital_Tube2()
 {
     _orientation = DISPLAY_ROTATE_0;
     _offset_x = 0;
@@ -73,259 +44,251 @@ Digital_Tube::Digital_Tube()
     _ms = 100;
 }
 
-bool Digital_Tube::isLegalToDisplay(char byte)
+bool Digital_Tube2::isLegalToDisplay(char byte)
 {
-    if( !((byte >= '.' && byte <= '9') || (byte >= 'A' && byte <= 'Z') || (byte >= 'a' && byte <= 'z') ) )
+    if( !((byte >= '.' && byte <= '9') || (byte >= 'A' && byte <= 'Z') ) )
         return false;
     return true;
 }
 
-uint16_t g_display_font[]={
+uint16_t g_display_font_2[]={
     // 0x0000,                 // display nothing.
-    0x0080,                 // 'upper .'
-    0x2000,                 // 'lower .'
-    0x4478,                 // '0'
-    0x0060,                 // '1'
-    0x0758,                 // '2'
-    0x0770,                 // '3'
-    0x4360,                 // '4'
-    0x4730,                 // '5'
-    0x4738,                 // '6'
-    0x0070,                 // '7'
-    0x4778,                 // '8'
-    0x4770,                 // '9'
-    0x4378,                 // 'A'
-    0x2d70,                 // 'B'
-    0x4418,                 // 'C'
-    0x2c70,                 // 'D'
-    0x4718,                 // 'E'
-    0x4318,                 // 'F'
-    0x4538,                 // 'G'
-    0x4368,                 // 'H'
-    0x2c10,                 // 'I'
-    0x0478,                 // 'J'
-    0x2806,                 // 'K'
-    0x4408,                 // 'L'
-    0x40ea,                 // 'M'
-    0x40ec,                 // 'N'
-    0x4478,                 // 'O'
-    0x4358,                 // 'P'
-    0x447c,                 // 'Q'
-    0x435c,                 // 'R'
-    0x0494,                 // 'S'
-    0x2810,                 // 'T'
-    0x4468,                 // 'U'
-    0x500a,                 // 'V'
-    0x506c,                 // 'W'
-    0x1086,                 // 'X'
-    0x0882,                 // 'Y'
-    0x1412,                 // 'Z'
-    0x0000,                 //  '/' ilegal num
+    0x4000,                 // '.'
+    0x0000,                 //  '/'   display nothing.
+    0xa145,                 // '0'
+    0x8001,                 // '1'
+    0x3107,                 // '2'
+    0xb007,                 // '3'
+    0x9043,                 // '4'
+    0xb046,                 // '5'
+    0xb146,                 // '6'
+    0x8005,                 // '7'
+    0xb147,                 // '8'
+    0xb047,                 // '9'
+    0x9147,                 // 'A'
+    0xb415,                 // 'B'
+    0x2144,                 // 'C'
+    0xa415,                 // 'D'
+    0x3146,                 // 'E'
+    0x1146,                 // 'F'
+    0xb144,                 // 'G'
+    0x9143,                 // 'H'
+    0x2414,                 // 'I'
+    0xA101,                 // 'J'
+    0x0c18,                 // 'K'
+    0x2140,                 // 'L'
+    0x8169,                 // 'M'
+    0x8961,                 // 'N'
+    0xa145,                 // 'O'
+    0x1147,                 // 'P'
+    0xa945,                 // 'Q'
+    0x1947,                 // 'R'
+    0x2824,                 // 'S'
+    0x0414,                 // 'T'
+    0xa141,                 // 'U'
+    0x8821,                 // 'V'
+    0x8b41,                 // 'W'
+    0x0a28,                 // 'X'
+    0x0428,                 // 'Y'
+    0x220c,                 // 'Z'
+    0x0000,                 // ilegal num
 };
 
 
-
-/**@brief Display number,If the param-num's len less than 4(or equal to),The tubes display static number,otherwise,it displays scroll number.
- * When it displays scroll number,the param interval is scrolling interval(ms) .. 
- * @param num the number to display.
- * @param interval :the interval of scroll number.
- * */
-void Digital_Tube::displayNum(uint32_t num,uint32_t interval)
+void Digital_Tube2::display_two_tube(char byte1,char byte2)
 {
-    char num_str[15] = {0};
-    sprintf(num_str,"%ld",(uint32_t)num);
-    displayString(num_str,interval);
+    if(!isLegalToDisplay(byte1))  
+    {
+        byte1 = '/';
+    }
+    if(!isLegalToDisplay(byte2))  
+    {
+        byte2 = '/';
+    }
+    setDispBuf(FIRST_TUBE,byte1);                  //The order of tube is reversed
+    setDispBuf(SECOND_TUBE,byte2);
+    writeBytes(_addr, 0x00, 16, _buffer);
+    delay(_ms);
 }
 
 
-
-void Digital_Tube::shiftDisplay(char *origin_disp_buf,char new_item)
+void Digital_Tube2::setDispBuf(TubeNum_2 num,char byte)
 {
-    char temp[TUBE_COUNT] = {0};
-    memcpy(temp,&origin_disp_buf[1],TUBE_COUNT-1);
-    temp[TUBE_COUNT-1] = new_item;
-    memcpy(origin_disp_buf,temp,TUBE_COUNT);
-    for(int i =0;i< TUBE_COUNT;i++)
+    if((byte >='.' && byte <= '9'))
     {
-        setTubeBuf(i+1,g_display_font[get_char_index(temp[i])]);
+        _buffer[num*2+2] = g_display_font_2[byte-'0'+2] >> 8;
+        _buffer[num*2+3] = g_display_font_2[byte-'0'+2];
+    }
+    else
+    {
+        _buffer[num*2+2] = g_display_font_2[byte-'A'+10+2] >> 8;
+        _buffer[num*2+3] = g_display_font_2[byte-'A'+10+2];
+    }
+}
+
+/**If the param num <100,The tubes display static number,otherwise,it displays scroll number.
+ * When it displays scroll number,the param interval is scrolling interval(ms) .
+ * 
+ * */
+
+void Digital_Tube2::displayNum(unsigned long int num,unsigned int interval)
+{
+    char first_tube_byte = 0,second_tube_byte = 0;
+    int i = 0;
+    int high_bit = 0;
+    char num_array[32] = {0};
+    if(num > 99) 
+    {
+        while(num)
+        {
+            num_array[i] = (num % 10)+0x30;
+            num /= 10;
+            i++;
+        }
+        for(;i >= 2;i-=2)
+        {
+            first_tube_byte = num_array[i-1];
+            second_tube_byte = num_array[i-2];
+
+            if(!isLegalToDisplay(first_tube_byte))  
+            {
+                first_tube_byte = '/';
+            }
+            if(!isLegalToDisplay(second_tube_byte))  
+            {
+                second_tube_byte = '/';
+            }
+            setDispBuf(FIRST_TUBE,first_tube_byte);
+            setDispBuf(SECOND_TUBE,second_tube_byte);
+            writeBytes(_addr, 0x00, 16, _buffer);
+            delay(interval);
+            
+        }
+        if(1 == i){
+            first_tube_byte = num_array[0];
+            second_tube_byte = '/';
+            setDispBuf(FIRST_TUBE,first_tube_byte);
+            setDispBuf(SECOND_TUBE,second_tube_byte);
+            writeBytes(_addr, 0x00, 16, _buffer);
+            delay(interval);
+        }
+        clear();
+        
+    }
+    else
+    {
+        first_tube_byte = (num / 10) + 0x30;
+        second_tube_byte = (num % 10 ) + 0x30;
+        if(!isLegalToDisplay(first_tube_byte))  
+        {
+            first_tube_byte = '/';
+        }
+        if(!isLegalToDisplay(second_tube_byte))  
+        {
+            second_tube_byte = '/';
+        }
+        
+        setDispBuf(FIRST_TUBE,first_tube_byte);
+        setDispBuf(SECOND_TUBE,second_tube_byte);
+
+        writeBytes(_addr, 0x00, 16, _buffer);
+        delay(_ms);
+    }    
+}
+
+/**If the param-str's len less than 2,The tubes display static string,otherwise,it displays scroll string.
+ * When it displays scroll string,the param interval is scrolling interval(ms) .
+ * Node:The library does not support lower case letters. 
+ * */
+void Digital_Tube2::displayString(char *str,unsigned int interval)
+{
+    char first_tube_byte = 0,second_tube_byte = 0;
+    int len = 0;
+    len = strlen(str);
+    if(len < 2)
+    {
+        if(len == 1)
+        {
+            first_tube_byte = str[0];
+        }
+        else
+        {
+            first_tube_byte = '/';
+        }
+        second_tube_byte = '/';
+    }
+    else if(2 == len)
+    {
+        first_tube_byte = str[0];
+        second_tube_byte = str[1];
+        if(!isLegalToDisplay(first_tube_byte))  
+        {
+            first_tube_byte = '/';
+        }
+        if(!isLegalToDisplay(second_tube_byte))  
+        {
+            second_tube_byte = '/';
+        }
+        
+        setDispBuf(FIRST_TUBE,first_tube_byte);
+        setDispBuf(SECOND_TUBE,second_tube_byte);
+
+        writeBytes(_addr, 0x00, 16, _buffer);
+        delay(_ms);
+    }
+    else
+    {
+        if(len >255 ) len = 255;
+        for(int i=0;i<len;i += 2)
+        {
+            first_tube_byte = str[i];
+            second_tube_byte = str[i+1];
+
+            if(!isLegalToDisplay(first_tube_byte))  
+            {
+                first_tube_byte = '/';
+            }
+            if(!isLegalToDisplay(second_tube_byte))  
+            {
+                second_tube_byte = '/';
+            }
+            setDispBuf(FIRST_TUBE,first_tube_byte);
+            setDispBuf(SECOND_TUBE,second_tube_byte);
+            writeBytes(_addr, 0x00, 16, _buffer);
+            delay(interval);
+            if(i+2 == len-1)
+            {
+                first_tube_byte = str[len-1];
+                second_tube_byte = '/';
+                setDispBuf(FIRST_TUBE,first_tube_byte);
+                setDispBuf(SECOND_TUBE,second_tube_byte);
+                writeBytes(_addr, 0x00, 16, _buffer);
+                delay(interval);
+                break;
+            }
+        }
+    }
+    
+}
+
+void Digital_Tube2::displayFull()
+{
+    for(int i=0;i<4;i++)
+    {
+        _buffer[i+2] = 0xff;
     }
     writeBytes(_addr, 0x00, 16, _buffer);
     delay(_ms);
 }
 
-/**@brief Display string,If the param-str's len less than 4(or equal to),The tubes display static string,otherwise,it displays scroll string.
- * When it displays scroll string,the param interval is scrolling interval(ms) .. 
- * @param str the str to display.
- * @param interval :the interval of scroll string.
- * */
-void Digital_Tube::displayString(char *str,uint32_t interval)
-{
-    char first_tube_byte = 0,second_tube_byte = 0;
-    int len = 0;
-    clearBuf();
-    len = strlen(str);
-    if(TUBE_COUNT >= len)
-    {
-        for(int i=0;i<len;i++)
-        {
-            setTubeBuf(TUBE_COUNT-len+i+1,g_display_font[get_char_index(str[i])]);  //Convert number to char;
-        }
-        writeBytes(_addr, 0x00, 16, _buffer);
-        delay(_ms);
-        
-    }
-    else
-    {
-        if(len > 255 ) len = 255;
-        char origin_disp_buf[TUBE_COUNT]={0};
-        for(int i=0;i<len;i++)
-        {
-            shiftDisplay(origin_disp_buf,str[i]);
-            delay(interval);
-        }
-    }
-}
-
-
-void Digital_Tube::clear()
+void Digital_Tube2::clear()
 {
     memset(_buffer, 0, sizeof(_buffer));
     writeBytes(_addr, 0x00, 16, _buffer);
     delay(_ms);
 }
 
-
-void Digital_Tube::fulDisplay()
-{
-    uint8_t buf[16] = {0};
-    memcpy(_buffer,buf,sizeof(buf));
-    memset(_buffer, 0xff, sizeof(_buffer));
-    writeBytes(_addr, 0x00, 16, _buffer);
-    delay(_ms);
-}
-
-
-void Digital_Tube::replace_bit12(TubeNum tube_num,bool bit1,bool bit2)
-{
-    switch(tube_num)
-    {
-        case FIRST_TUBE:
-
-        _buffer[10] |= (bit1<<4);
-        _buffer[10] |= (bit2<<3);
-        break;
-        case SECOND_TUBE:
-        _buffer[10] |= (bit1<<6);
-        _buffer[11] |= (bit2<<6);
-        break;
-        case THIRD_TUBE:
-        _buffer[10] |= (bit1<<5);
-        _buffer[11] |= (bit2<<1);
-        break;
-        case FOURTH_TUBE:
-        _buffer[11] |= (bit1<<2);
-        _buffer[11] |= (bit2<<0);
-        break;
-        default:break;
-    }
-}
-
-void Digital_Tube::setPoint(bool upper_on,bool lower_on)
-{
-    if(upper_on){
-        _buffer[10] |= g_display_font[0];
-        _buffer[11] |= g_display_font[0]>>8;
-    }
-    if(lower_on){
-        _buffer[10] |= g_display_font[1];
-        _buffer[11] |= g_display_font[1]>>8;
-    }
-}
-
-
-void Digital_Tube::setTubeBuf(TubeNum tube_num,uint16_t value)
-{
-    
-    _buffer[tube_num*2] = value;
-    _buffer[tube_num*2+1] = value >> 8;
-    replace_bit12(tube_num,value&0x02,value&0x04);
-}
-
-/**@brief Specify the display char of a digital tube. 
- * @param tube_num The number of tube ,total 4.
- * @param c ,The char to display
- * */
-void Digital_Tube::setTubeSingleChar(TubeNum tube_num,char c)
-{
-    if(!(((c >= 'A') && (c <= 'Z')) || ((c >= 'a') && (c <= 'z'))) )
-    {
-        return ;
-    }
-    uint16_t value = g_display_font[get_char_index(c)];
-    _buffer[tube_num*2] = value;
-    _buffer[tube_num*2+1] = value >> 8;
-    replace_bit12(tube_num,value&0x02,value&0x04);
-}
-
-/**@brief Specify the display number of a digital tube. 
- * @param tube_num The number of tube ,total 4.
- * @param num ,The number to display
- * */
-void Digital_Tube::setTubeSingleNum(TubeNum tube_num,char num)
-{
-    if( !((num >= 0) && (num <= 9)) )
-        return ;
-    uint16_t value = g_display_font[get_char_index(num+0x30)];
-    _buffer[tube_num*2] = value;
-    _buffer[tube_num*2+1] = value >> 8;
-    replace_bit12(tube_num,value&0x02,value&0x04);
-}
-
-
-void Digital_Tube::display_one_tube(TubeNum tube_num,uint16_t value)
-{
-    _buffer[tube_num*2] = value;
-    _buffer[tube_num*2+1] = value >> 8;
-    replace_bit12(tube_num,value&0x02,value&0x04);
-    writeBytes(_addr, 0x00, 16, _buffer);
-    delay(_ms);
-}
-
-
-void Digital_Tube::clearBuf()
-{
-    memset(_buffer,0,sizeof(_buffer));
-}
-
-int Digital_Tube::get_char_index(char c)
-{
-    if((c >= '0') && (c <= '9'))
-    {
-        return c-0x30+2;
-    }
-    else if((c >= 'A') && (c <= 'Z'))
-    {
-        return c-0x37+2;
-    }
-    else if((c >= 'a') && (c <= 'z'))
-    {
-        return c-0x57+2;
-    }
-    else
-    {
-        return '/'+2;
-    }
-}
-
-
-
-void Digital_Tube::display()
-{
-    writeBytes(_addr, 0x00, 16, _buffer);
-    delay(_ms);
-}
-
-
+/*
 bool HT16K33::writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t* data)
 {
     Wire.beginTransmission(devAddr);
@@ -335,6 +298,4 @@ bool HT16K33::writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
     }
      Wire.endTransmission();
 }
-
-
-
+*/

@@ -1,12 +1,19 @@
-/*
- * display_scroll_string.ino
- * Driver for digital tube.
- *  
- * Copyright (c) 2018 Seeed Technology Co., Ltd.
+/* 
+ * HT16K33_driver.cpp
+ * A library for Grove - grove_quad_alphanumeric_display
+ *
+ * Copyright (c) 2018 seeed technology inc.
  * Website    : www.seeed.cc
- * Author     : downey
- * Create Time: sep. 2018
+ * Author     : Jerry Yip
+ * Create Time: 2018-06
+ * Version    : 0.1
  * Change Log :
+ * Copyright (c) 2018 seeed technology inc.
+ * Website    : www.seeed.cc
+ * Author     : downey 
+ * Create Time: 2018-06
+ * Version    : 1.1
+ * Change Log :for digital tube development.
  *
  * The MIT License (MIT)
  *
@@ -28,33 +35,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-#include <Wire.h>
-
-//#define DUAL_NUMERIC
-
-#ifdef DUAL_NUMERIC
-    #include "grove_dual_alphanumeric_display.h"
-    #define NUMERIC_I2C_ADDR  0x70
-    Digital_Tube2 tube;
-#else
-    #include "grove_quad_alphanumeric_display.h"
-    #define NUMERIC_I2C_ADDR  0x71
-    Digital_Tube4 tube;
-#endif
+#include <Arduino.h>
+#include "HT16K33_driver.h"
 
 
-void setup()
+
+bool HT16K33::writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t* data)
 {
-    Wire.begin();
-    tube.init(NUMERIC_I2C_ADDR);
-    tube.setBrightness(15);
-    tube.setBlinkRate(BLINK_OFF);
+    Wire.beginTransmission(devAddr);
+    Wire.write((uint8_t) regAddr);
+    for (uint8_t i = 0; i < length; i++) {
+        Wire.write((uint8_t) data[i]);
+    }
+     Wire.endTransmission();
 }
 
 
 
-void loop()
+void HT16K33::init(uint8_t addr)
 {
-    tube.displayString("ABCDEFGHJIYZ",500);
-    delay(1000);
+    _addr = addr;
+    // turn on oscillator
+    writeBytes(_addr, 0x21, 0, (uint8_t *)NULL);
 }
+
+/*brightness:0-15*/
+void HT16K33::setBrightness(uint8_t brightness)
+{
+    writeBytes(_addr, (0xE0 | brightness), 0, (uint8_t *)NULL);
+}
+
+
+void HT16K33::setBlinkRate(blink_type_t blink_type)
+{
+    writeBytes(_addr, (0x80 | 0x01 | (blink_type << 1)), 0, (uint8_t *)NULL);
+}
+
