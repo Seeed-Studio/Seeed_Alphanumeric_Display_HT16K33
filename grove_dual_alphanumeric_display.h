@@ -39,8 +39,8 @@
 #ifndef __GROVE_LED_MATRIX_DRIVER_HT16K33__
 #define __GROVE_LED_MATRIX_DRIVER_HT16K33__
 
-#include "I2Cdev.h"
-
+//#include "I2Cdev.h"
+#include <Arduino.h>
 
 #define HT16K33_DEFAULT_I2C_ADDR    0x71
 #define MAX_BIG_BUFFER_SIZE         (8*20)   
@@ -81,6 +81,9 @@ typedef enum
 class HT16K33 {
 public:
     HT16K33();
+
+    bool writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t* data);
+    
     void init(uint8_t addr=HT16K33_DEFAULT_I2C_ADDR);
 
     void setBlinkRate(blink_type_t blink_type);
@@ -161,6 +164,8 @@ private:
     orientation_type_t _orientation;
     int8_t _offset_x, _offset_y;
     bool isLegalToDisplay(char byte);
+
+    
 };
 
 #endif //__GROVE_LED_MATRIX_DRIVER_HT16K33__

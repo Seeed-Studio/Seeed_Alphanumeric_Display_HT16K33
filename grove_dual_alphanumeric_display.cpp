@@ -37,7 +37,7 @@
  */
 
 #include "grove_dual_alphanumeric_display.h"
-
+#include "Wire.h"
 
 HT16K33::HT16K33()
 {
@@ -47,19 +47,19 @@ void HT16K33::init(uint8_t addr)
 {
     _addr = addr;
     // turn on oscillator
-    I2Cdev::writeBytes(_addr, 0x21, 0, (uint8_t *)NULL);
+    writeBytes(_addr, 0x21, 0, (uint8_t *)NULL);
 }
 
 /*brightness:0-15*/
 void HT16K33::setBrightness(uint8_t brightness)
 {
-    I2Cdev::writeBytes(_addr, (0xE0 | brightness), 0, (uint8_t *)NULL);
+    writeBytes(_addr, (0xE0 | brightness), 0, (uint8_t *)NULL);
 }
 
 
 void HT16K33::setBlinkRate(blink_type_t blink_type)
 {
-    I2Cdev::writeBytes(_addr, (0x80 | 0x01 | (blink_type << 1)), 0, (uint8_t *)NULL);
+    writeBytes(_addr, (0x80 | 0x01 | (blink_type << 1)), 0, (uint8_t *)NULL);
 }
 
 Digital_Tube::Digital_Tube()
@@ -149,7 +149,7 @@ void Digital_Tube::shiftDisplay(char *origin_disp_buf,char new_item)
     {
         setTubeBuf(i+1,g_display_font[get_char_index(temp[i])]);
     }
-    I2Cdev::writeBytes(_addr, 0x00, 16, _buffer);
+    writeBytes(_addr, 0x00, 16, _buffer);
     delay(_ms);
 }
 
@@ -170,7 +170,7 @@ void Digital_Tube::displayString(char *str,uint32_t interval)
         {
             setTubeBuf(TUBE_COUNT-len+i+1,g_display_font[get_char_index(str[i])]);  //Convert number to char;
         }
-        I2Cdev::writeBytes(_addr, 0x00, 16, _buffer);
+        writeBytes(_addr, 0x00, 16, _buffer);
         delay(_ms);
         
     }
@@ -190,7 +190,7 @@ void Digital_Tube::displayString(char *str,uint32_t interval)
 void Digital_Tube::clear()
 {
     memset(_buffer, 0, sizeof(_buffer));
-    I2Cdev::writeBytes(_addr, 0x00, 16, _buffer);
+    writeBytes(_addr, 0x00, 16, _buffer);
     delay(_ms);
 }
 
@@ -200,7 +200,7 @@ void Digital_Tube::fulDisplay()
     uint8_t buf[16] = {0};
     memcpy(_buffer,buf,sizeof(buf));
     memset(_buffer, 0xff, sizeof(_buffer));
-    I2Cdev::writeBytes(_addr, 0x00, 16, _buffer);
+    writeBytes(_addr, 0x00, 16, _buffer);
     delay(_ms);
 }
 
@@ -287,7 +287,7 @@ void Digital_Tube::display_one_tube(TubeNum tube_num,uint16_t value)
     _buffer[tube_num*2] = value;
     _buffer[tube_num*2+1] = value >> 8;
     replace_bit12(tube_num,value&0x02,value&0x04);
-    I2Cdev::writeBytes(_addr, 0x00, 16, _buffer);
+    writeBytes(_addr, 0x00, 16, _buffer);
     delay(_ms);
 }
 
@@ -321,10 +321,20 @@ int Digital_Tube::get_char_index(char c)
 
 void Digital_Tube::display()
 {
-    I2Cdev::writeBytes(_addr, 0x00, 16, _buffer);
+    writeBytes(_addr, 0x00, 16, _buffer);
     delay(_ms);
 }
 
+
+bool HT16K33::writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8_t* data)
+{
+    Wire.beginTransmission(devAddr);
+    Wire.write((uint8_t) regAddr);
+    for (uint8_t i = 0; i < length; i++) {
+        Wire.write((uint8_t) data[i]);
+    }
+     Wire.endTransmission();
+}
 
 
 
