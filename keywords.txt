@@ -1,16 +1,17 @@
 #######################################
-# Syntax Coloring Map For Grove - Four Digital Tubes Display
+# Syntax Coloring Map For Grove -alphanumeric display
 #######################################
 
 #######################################
 # Datatypes (KEYWORD1)
 #######################################
-Matrix_8x8  KEYWORD1
+Seeee_Digital_Tube  KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
 init	KEYWORD2
+ setTubeType	KEYWORD2
 setBlinkRate	KEYWORD2
 setBrightness	KEYWORD2
 displayString   KEYWORD2

@@ -30,48 +30,39 @@
  */
 #include <Wire.h>
 
+#include "grove_alphanumeric_display.h"
 
-//#define DUAL_NUMERIC
-
-#ifdef DUAL_NUMERIC
-    #include "grove_dual_alphanumeric_display.h"
-    #define NUMERIC_I2C_ADDR  0x70
-    Digital_Tube2 tube;
-#else
-    #include "grove_quad_alphanumeric_display.h"
-    #define NUMERIC_I2C_ADDR  0x71
-    Digital_Tube4 tube;
-#endif
-
+Seeee_Digital_Tube tube;
 
 void setup()
 {
     Wire.begin();
-    tube.init(NUMERIC_I2C_ADDR);
+
+    // If using four digital tubes, use this configuration.
+    tube.setTubeType(TYPE_4,TYPE_4_DEFAULT_I2C_ADDR);
+
+    // If using two digital tubes, use this configuration.
+    // tube.setTubeType(TYPE_2,TYPE_2_DEFAULT_I2C_ADDR);
+
     tube.setBrightness(15);
     tube.setBlinkRate(BLINK_OFF);
+    
 }
 
 
 void loop()
 {
-    #ifdef DUAL_NUMERIC
-    tube.display_two_tube('.','C');
-    delay(1000);
-    tube.displayNum(23,0);
-    delay(1000);
-    tube.displayString("AB",0);
-    delay(1000);
-
-    #else
-    tube.displayNum(123);
-    delay(2000);
-    tube.displayNum(4567);
-    delay(2000);
-    tube.displayString("ABCD");
-    delay(2000);
-    tube.displayString("abcd");
+    
+    tube.displayNum(12);
     delay(2000);
 
-    #endif
+    tube.displayNum(4567,500);
+    delay(2000);
+
+    tube.displayString("AB",500);
+    delay(2000);
+
+    tube.displayString("abcd",500);
+    delay(2000);
+    
 }

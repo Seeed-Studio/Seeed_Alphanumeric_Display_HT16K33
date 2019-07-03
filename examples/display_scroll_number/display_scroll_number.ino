@@ -29,24 +29,23 @@
  * THE SOFTWARE.
  */
 #include <Wire.h>
+#include "grove_alphanumeric_display.h"
 
-//#define DUAL_NUMERIC
 
-#ifdef DUAL_NUMERIC
-    #include "grove_dual_alphanumeric_display.h"
-    #define NUMERIC_I2C_ADDR  0x70
-    Digital_Tube2 tube;
-#else
-    #include "grove_quad_alphanumeric_display.h"
-    #define NUMERIC_I2C_ADDR  0x71
-    Digital_Tube4 tube;
-#endif
+Seeee_Digital_Tube tube;
+
 
 
 void setup()
 {
     Wire.begin();
-    tube.init(NUMERIC_I2C_ADDR);
+
+    // If using two digital tubes, use this configuration.
+    // tube.setTubeType(TYPE_2,TYPE_2_DEFAULT_I2C_ADDR);
+
+    // If using four digital tubes, use this configuration.
+    tube.setTubeType(TYPE_4,TYPE_4_DEFAULT_I2C_ADDR);
+
     tube.setBrightness(15);
     tube.setBlinkRate(BLINK_OFF);
 }

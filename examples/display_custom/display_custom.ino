@@ -34,18 +34,25 @@
 /*********************************************************/
 /*****NOTICE : This example only for qual_alphanumeric****/
 /*********************************************************/
-#include "grove_quad_alphanumeric_display.h"
-#define NUMERIC_I2C_ADDR  0x71
+#include "grove_alphanumeric_display.h"
 
-Digital_Tube4 tube;
+Seeee_Digital_Tube tube;
 
 
 void setup()
 {
     Wire.begin();
-    tube.init(NUMERIC_I2C_ADDR);
+    
+    // If using two digital tubes, use this configuration.
+    // tube.setTubeType(TYPE_2,TYPE_2_DEFAULT_I2C_ADDR);
+
+    // If using four digital tubes, use this configuration.
+    tube.setTubeType(TYPE_4,TYPE_4_DEFAULT_I2C_ADDR);
+    
+
     tube.setBrightness(15);
     tube.setBlinkRate(BLINK_1HZ);
+    
     
 }
 
@@ -55,9 +62,15 @@ void displayCustom()
     tube.clearBuf();
     tube.setTubeSingleChar(FIRST_TUBE,'t');
     tube.setTubeSingleChar(SECOND_TUBE,'T');
+
+    //if using two digital tubes,there's no third&fourth channel.
+
     tube.setTubeSingleNum(THIRD_TUBE,5);
     tube.setTubeSingleNum(FOURTH_TUBE,5);
-    tube.setPoint(true,true);
+
+    // The location of point is different between two&four digital tubes.
+    tube.setPoint(true,false);
+
     tube.display();
 }
 

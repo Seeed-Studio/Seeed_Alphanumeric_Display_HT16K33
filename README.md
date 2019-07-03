@@ -5,30 +5,20 @@
 ## Introduction of sensor
 Grove - alphanumeric Digital Tubes Display,Based on HT16K33,it can display number,and scrolling displaying.
 
-**Support dual(two tubes)&qual(four tubes) alphanumeric Digital Tubes simultaneously.**
 
-***
-
-## Usage:
-Download all the source files.
-There are four examples for user to use.
->* **example/display_custom_4/display_custom_4.ino**.Only support  for qual(four tubes) alphanumeric Digital Tubes.
->* **example/display_scroll_string/display_scroll_string.ino**:Display scrolling string which longer than 2(4).Support dual(two tubes)&qual(four tubes) alphanumeric Digital Tubes simultaneously
->* **example/display_scroll_number/display_scroll_number.ino**:Display scrolling number which bigger than 99(9999).Support dual(two tubes)&qual(four tubes) alphanumeric Digital Tubes simultaneously.
->* **example/display_basic/display_basic.ino**:Basic static display demo.Support dual(two tubes)&qual(four tubes) alphanumeric Digital Tubes simultaneously
->* **example/number_increment_2/number_increment_2.ino**,Only support  for dual(two tubes) alphanumeric Digital Tubes.
-
-----
-
-## select type of alphanumeric Digital Tubes Display
-**You can switch dual/qual alphanumeric Digital Tubes Display by change the micro <DUAL_NUMERIC> in every example.**   
+### Notice:
+* Support dual(two tubes)&qual(four tubes) alphanumeric Digital Tubes simultaneously. use following API to select   the  type of display.
 ```
-//#define DUAL_NUMERIC
-```  
+    tube.setTubeType(TYPE_4,I2C_ADDR_AFTER_CHANGE_FOUR);
+```
+or  
 
-comment it ,using qual alphanumeric Digital Tubes Display,otherwise ,using dual alphanumeric Digital Tubes Display.
+```
+    tube.setTubeType(TYPE_2,TYPE_2_DEFAULT_I2C_ADDR);
+```
+* The example : < combine_two_displays.ino > shows how to combine two displays in one project.
 
-**defaule using qual alphanumeric Digital Tubes Display**
+
 
 ***
 

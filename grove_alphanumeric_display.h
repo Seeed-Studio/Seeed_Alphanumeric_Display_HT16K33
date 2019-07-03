@@ -1,6 +1,6 @@
 /* 
- * grove_quad_alphanumeric_display.h
- * A library for Grove - grove_quad_alphanumeric_display
+ * grove_alphanumeric_display.h
+ * A library for Grove - grove_alphanumeric_display
  *
  * Copyright (c) 2018 seeed technology inc.
  * Website    : www.seeed.cc
@@ -43,10 +43,15 @@
 #include <Arduino.h>
 #include "HT16K33_driver.h"
 
-#define HT16K33_DEFAULT_I2C_ADDR    0x71
+// #define TYPE_4_DEFAULT_I2C_ADDR    0x75
+#define TYPE_4_DEFAULT_I2C_ADDR    0x71
+#define TYPE_2_DEFAULT_I2C_ADDR    0x70
+
 #define MAX_BIG_BUFFER_SIZE         (8*20)   
 
-#define TUBE_COUNT  4
+#define MAX_TUBE_COUNT  4
+
+
 
 typedef enum
 {
@@ -54,13 +59,25 @@ typedef enum
     SECOND_TUBE,
     THIRD_TUBE,
     FOURTH_TUBE,
-}TubeNum_4;
+}TubeNum;
+
+typedef enum{
+    TYPE_2,
+    TYPE_4,
+}TubeType_t;
 
 
-class Digital_Tube4 : public HT16K33 {
+typedef enum{
+    CNT_2 = 2,
+    CNT_4 = 4,
+}TubeCnt_t;
+
+class Seeee_Digital_Tube : public HT16K33 {
 
 public:
-    Digital_Tube4();
+    Seeee_Digital_Tube();
+
+    void setTubeType(TubeType_t type,uint8_t addr = TYPE_2_DEFAULT_I2C_ADDR);
 
     void clear();
     /**@brief Display number,If the param-num's len less than 4,The tubes display static number,otherwise,it displays scroll number.
@@ -82,7 +99,6 @@ public:
     void fulDisplay();
 
     
-    
     /**@brief Clear _buffer,just clear. 
      * 
      * */
@@ -98,34 +114,37 @@ public:
      * @param tube_num The number of tube ,total 4.
      * @param num ,The number to display
      * */
-    void setTubeSingleChar(TubeNum_4 tube_num,char c);
+    void setTubeSingleChar(TubeNum tube_num,char c);
 
     /**@brief Specify the display number of a digital tube. 
      * @param tube_num The number of tube ,total 4.
      * @param num ,The number to display
      * */
-    void setTubeSingleNum(TubeNum_4 tube_num,char num);
+    void setTubeSingleNum(TubeNum tube_num,char num);
 
     /**@brief Set two points status.
      * @prarm upper_on if true,the upper point light on ,otherwise turn off; 
      * @prarm lower_on if true,the upper point light on ,otherwise turn off; 
      * */
-    void setPoint(bool upper_on,bool lower_on);
+    void setPoint(bool first_dot,bool second_dot);
 private:
-    void display_one_tube(TubeNum_4 tube_num,uint16_t value);
-    void replace_bit12(TubeNum_4 tube_num,bool bit1,bool bit2);
-    void setTubeBuf(TubeNum_4 tube_num,uint16_t value);
+    void display_one_tube(TubeNum tube_num,uint16_t value);
+    void replace_bit12(TubeNum tube_num,bool bit1,bool bit2);
+    void setTubeBuf(TubeNum tube_num,char byte);
     int get_char_index(char c);
     void shiftDisplay(char *origin_disp_buf,char new_item);
     // Low1 High1 Low2 High2 ... Low8 High8
     uint8_t _buffer[16]; 
-    uint8_t _big_buffer[MAX_BIG_BUFFER_SIZE];
-    uint16_t _cursor_start, _cursor_end, _cursor_steps;
+    //uint8_t _big_buffer[MAX_BIG_BUFFER_SIZE];
+    //uint16_t _cursor_start, _cursor_end, _cursor_steps;
     uint16_t _ms;
-    orientation_type_t _orientation;
-    int8_t _offset_x, _offset_y;
+    //orientation_type_t _orientation;
+    //int8_t _offset_x, _offset_y;
     bool isLegalToDisplay(char byte);
 
+    TubeType_t _type;  
+    TubeCnt_t  _tube_cnt;
+    uint16_t *disp_font_p;
     
 };
 
