@@ -1,5 +1,5 @@
 /*
- * number_increment_2.ino
+ * number_increment.ino
  * Driver for digital tube.
  *  
  * Copyright (c) 2018 Seeed Technology Co., Ltd.
@@ -32,7 +32,7 @@
 #include "grove_alphanumeric_display.h"
 
 
-Seeee_Digital_Tube tube;
+Seeed_Digital_Tube tube;
 
 char hex_str[10];
 

@@ -2,13 +2,13 @@
 
 #include "grove_alphanumeric_display.h"
 
-Seeee_Digital_Tube tube1;
-Seeee_Digital_Tube tube2;
+Seeed_Digital_Tube tube1;
+Seeed_Digital_Tube tube2;
 
 /** 
  * NOTICE:Every tubes display has the same default i2c address.
- *        if you want to combine two(or more)display in one project,you should change the i2c
- *           i2c address,by soldering the pad of display backside.
+ *        if you want to combine two(or more)display in one project,you should change the
+ *           i2c address,by soldering the pad of device's backside.
  *        please refer to our wiki to get more details.
  * */
 #define I2C_ADDR_AFTER_CHANGE_FOUR  0x75

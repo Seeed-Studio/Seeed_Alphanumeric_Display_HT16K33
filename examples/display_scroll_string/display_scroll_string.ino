@@ -31,7 +31,7 @@
 #include <Wire.h>
 #include "grove_alphanumeric_display.h"
 
-Seeee_Digital_Tube tube;
+Seeed_Digital_Tube tube;
 
 
 

@@ -5,13 +5,13 @@
 #######################################
 # Datatypes (KEYWORD1)
 #######################################
-Seeee_Digital_Tube  KEYWORD1
+Seeed_Digital_Tube  KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
 init	KEYWORD2
- setTubeType	KEYWORD2
+setTubeType	KEYWORD2
 setBlinkRate	KEYWORD2
 setBrightness	KEYWORD2
 displayString   KEYWORD2

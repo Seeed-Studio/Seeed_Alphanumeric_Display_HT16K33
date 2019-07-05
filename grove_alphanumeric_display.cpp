@@ -130,14 +130,14 @@ uint16_t g_display_font2[]={
 };
 
 
-Seeee_Digital_Tube::Seeee_Digital_Tube()
+Seeed_Digital_Tube::Seeed_Digital_Tube()
 {
     
     _ms = 100;
 }
 
 
-void Seeee_Digital_Tube::setTubeType(TubeType_t type,uint8_t addr)
+void Seeed_Digital_Tube::setTubeType(TubeType_t type,uint8_t addr)
 {
     _type = type;
     (_type == TYPE_2) ? (_tube_cnt = CNT_2) : (_tube_cnt = CNT_4);
@@ -145,7 +145,7 @@ void Seeee_Digital_Tube::setTubeType(TubeType_t type,uint8_t addr)
     HT16K33::init(addr);
 }
 
-bool Seeee_Digital_Tube::isLegalToDisplay(char byte)
+bool Seeed_Digital_Tube::isLegalToDisplay(char byte)
 {
     if( !((byte >= '.' && byte <= '9') || (byte >= 'A' && byte <= 'Z') || (byte >= 'a' && byte <= 'z') ) )
         return false;
@@ -160,7 +160,7 @@ bool Seeee_Digital_Tube::isLegalToDisplay(char byte)
  * @param num the number to display.
  * @param interval :the interval of scroll number.
  * */
-void Seeee_Digital_Tube::displayNum(uint32_t num,uint32_t interval)
+void Seeed_Digital_Tube::displayNum(uint32_t num,uint32_t interval)
 {
     char num_str[15] = {0};
     sprintf(num_str,"%ld",(uint32_t)num);
@@ -169,7 +169,7 @@ void Seeee_Digital_Tube::displayNum(uint32_t num,uint32_t interval)
 
 
 
-void Seeee_Digital_Tube::shiftDisplay(char *origin_disp_buf,char new_item)
+void Seeed_Digital_Tube::shiftDisplay(char *origin_disp_buf,char new_item)
 {
     char temp[MAX_TUBE_COUNT] = {0};
 
@@ -193,7 +193,7 @@ void Seeee_Digital_Tube::shiftDisplay(char *origin_disp_buf,char new_item)
  * @param str the str to display.
  * @param interval :the interval of scroll string.
  * */
-void Seeee_Digital_Tube::displayString(char *str,uint32_t interval)
+void Seeed_Digital_Tube::displayString(char *str,uint32_t interval)
 {
     int len = 0;
     clearBuf();
@@ -230,7 +230,7 @@ void Seeee_Digital_Tube::displayString(char *str,uint32_t interval)
 }
 
 
-void Seeee_Digital_Tube::clear()
+void Seeed_Digital_Tube::clear()
 {
     memset(_buffer, 0, sizeof(_buffer));
     writeBytes(_addr, 0x00, 16, _buffer);
@@ -238,7 +238,7 @@ void Seeee_Digital_Tube::clear()
 }
 
 
-void Seeee_Digital_Tube::fulDisplay()
+void Seeed_Digital_Tube::fulDisplay()
 {
     uint8_t buf[16] = {0};
     memcpy(_buffer,buf,sizeof(buf));
@@ -247,12 +247,12 @@ void Seeee_Digital_Tube::fulDisplay()
     delay(_ms);
 }
 
-/** Because of the difference of the hardware design of two kinds of display(two & four tubes).
+/** There are some differences of the hardware design of two kinds of display(two & four tubes).
  *  two digital tubes use _buffer[2,3,4,5] to control display.
  *  four digital tubes use _buffer[2,3,4,5,6,7,8,9,10,11] to control display.
  *  
  **/
-void Seeee_Digital_Tube::replace_bit12(TubeNum tube_num,bool bit1,bool bit2)
+void Seeed_Digital_Tube::replace_bit12(TubeNum tube_num,bool bit1,bool bit2)
 {
     switch(tube_num)
     {
@@ -289,7 +289,7 @@ void Seeee_Digital_Tube::replace_bit12(TubeNum tube_num,bool bit1,bool bit2)
     }
 }
 
-void Seeee_Digital_Tube::setPoint(bool first_dot,bool second_dot)
+void Seeed_Digital_Tube::setPoint(bool first_dot,bool second_dot)
 {
     if( TYPE_4 == _type )
     {
@@ -317,7 +317,7 @@ void Seeee_Digital_Tube::setPoint(bool first_dot,bool second_dot)
 }
 
 
-void Seeee_Digital_Tube::setTubeBuf(TubeNum tube_num,char byte)
+void Seeed_Digital_Tube::setTubeBuf(TubeNum tube_num,char byte)
 {
     uint16_t value = disp_font_p[get_char_index(byte)];
     
@@ -363,7 +363,7 @@ void Seeee_Digital_Tube::setTubeBuf(TubeNum tube_num,char byte)
  * @param tube_num The number of tube ,total 4.
  * @param c ,The char to display
  * */
-void Seeee_Digital_Tube::setTubeSingleChar(TubeNum tube_num,char c)
+void Seeed_Digital_Tube::setTubeSingleChar(TubeNum tube_num,char c)
 {
     if(!( ((c >= 'A') && (c <= 'Z')) || ((c >= 'a') && (c <= 'z')) || (c=='.') ) )
     {
@@ -389,7 +389,7 @@ void Seeee_Digital_Tube::setTubeSingleChar(TubeNum tube_num,char c)
  * @param tube_num The number of tube ,total 4.
  * @param num ,The number to display
  * */
-void Seeee_Digital_Tube::setTubeSingleNum(TubeNum tube_num,char num)
+void Seeed_Digital_Tube::setTubeSingleNum(TubeNum tube_num,char num)
 {
     if( !((num >= 0) && (num <= 9)) )
         return ;
@@ -411,7 +411,7 @@ void Seeee_Digital_Tube::setTubeSingleNum(TubeNum tube_num,char num)
 }
 
 
-void Seeee_Digital_Tube::display_one_tube(TubeNum tube_num,uint16_t value)
+void Seeed_Digital_Tube::display_one_tube(TubeNum tube_num,uint16_t value)
 {
     _buffer[tube_num*2] = value;
     _buffer[tube_num*2+1] = value >> 8;
@@ -421,12 +421,12 @@ void Seeee_Digital_Tube::display_one_tube(TubeNum tube_num,uint16_t value)
 }
 
 
-void Seeee_Digital_Tube::clearBuf()
+void Seeed_Digital_Tube::clearBuf()
 {
     memset(_buffer,0,sizeof(_buffer));
 }
 
-int Seeee_Digital_Tube::get_char_index(char c)
+int Seeed_Digital_Tube::get_char_index(char c)
 {
     if((c >= '0') && (c <= '9'))
     {
@@ -447,7 +447,7 @@ int Seeee_Digital_Tube::get_char_index(char c)
 }
 
 
-void Seeee_Digital_Tube::display()
+void Seeed_Digital_Tube::display()
 {
     writeBytes(_addr, 0x00, 16, _buffer);
     delay(_ms);

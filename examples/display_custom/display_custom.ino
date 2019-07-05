@@ -1,5 +1,5 @@
 /*
- * display_custom_4.ino
+ * display_custom.ino
  * Example for digital tube.
  *  
  * Copyright (c) 2018 Seeed Technology Co., Ltd.
@@ -31,12 +31,9 @@
 #include <Wire.h>
 
 
-/*********************************************************/
-/*****NOTICE : This example only for qual_alphanumeric****/
-/*********************************************************/
 #include "grove_alphanumeric_display.h"
 
-Seeee_Digital_Tube tube;
+Seeed_Digital_Tube tube;
 
 
 void setup()

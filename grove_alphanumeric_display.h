@@ -72,22 +72,22 @@ typedef enum{
     CNT_4 = 4,
 }TubeCnt_t;
 
-class Seeee_Digital_Tube : public HT16K33 {
+class Seeed_Digital_Tube : public HT16K33 {
 
 public:
-    Seeee_Digital_Tube();
+    Seeed_Digital_Tube();
 
     void setTubeType(TubeType_t type,uint8_t addr = TYPE_2_DEFAULT_I2C_ADDR);
 
     void clear();
-    /**@brief Display number,If the param-num's len less than 4,The tubes display static number,otherwise,it displays scroll number.
+    /**@brief Display number,If the param-num's len less than count of tubes(2 or 4),The tubes display static number,otherwise,it displays scroll number.
      * When it displays scroll number,the param interval is scrolling interval(ms) .. 
      * @param num the number to display.
      * @param interval :the interval of scroll number.
      * */
     void displayNum(uint32_t num,uint32_t interval = 0);
 
-    /**@brief Display string,If the param-str's len less than 4,The tubes display static string,otherwise,it displays scroll string.
+    /**@brief Display string,If the param-str's len less than count of tube(2 or 4),The tubes display static string,otherwise,it displays scroll string.
      * When it displays scroll string,the param interval is scrolling interval(ms) .. 
      * @param str the str to display.
      * @param interval :the interval of scroll string.
@@ -111,20 +111,20 @@ public:
     void display();
 
     /**@brief Specify the display char of a digital tube. 
-     * @param tube_num The number of tube ,total 4.
+     * @param tube_num The number of tube ,depend on the device you are using (max : 2 or 4).
      * @param num ,The number to display
      * */
     void setTubeSingleChar(TubeNum tube_num,char c);
 
     /**@brief Specify the display number of a digital tube. 
-     * @param tube_num The number of tube ,total 4.
+     * @param tube_num The number of tube ,depend on the device you are using ( max : 2 or 4).
      * @param num ,The number to display
      * */
     void setTubeSingleNum(TubeNum tube_num,char num);
 
     /**@brief Set two points status.
-     * @prarm upper_on if true,the upper point light on ,otherwise turn off; 
-     * @prarm lower_on if true,the upper point light on ,otherwise turn off; 
+     * @prarm upper_on if true,the first point light on ,otherwise turn off; 
+     * @prarm lower_on if true,the second point light on ,otherwise turn off; 
      * */
     void setPoint(bool first_dot,bool second_dot);
 private:
