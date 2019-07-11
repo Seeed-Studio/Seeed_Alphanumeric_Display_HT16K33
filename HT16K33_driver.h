@@ -70,7 +70,8 @@ enum blink_type_t
 
 class HT16K33 {
 public:
-    HT16K33(){}
+    HT16K33(){};
+
     void init(uint8_t addr);
 
     void setBlinkRate(blink_type_t blink_type);

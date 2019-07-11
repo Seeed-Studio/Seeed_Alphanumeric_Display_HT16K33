@@ -71,3 +71,8 @@ void HT16K33::setBlinkRate(blink_type_t blink_type)
     writeBytes(_addr, (0x80 | 0x01 | (blink_type << 1)), 0, (uint8_t *)NULL);
 }
 
+void HT16K33::clear()
+{
+    
+}
+
