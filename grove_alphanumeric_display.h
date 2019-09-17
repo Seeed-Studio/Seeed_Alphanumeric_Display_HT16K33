@@ -51,7 +51,37 @@
 
 #define MAX_TUBE_COUNT  4
 
+// Long hand segment definitions.
+#define SEGMENT_TOP 0x1
+#define SEGMENT_TOP_LEFT 0x2
+#define SEGMENT_TOP_LEFT_DIAGONAL 0x4
+#define SEGMENT_TOP_RIGHT 0x8
+#define SEGMENT_TOP_RIGHT_DIAGONAL 0x10
+#define SEGMENT_TOP_VERTICAL 0x20
+#define SEGMENT_MIDDLE_LEFT 0x40
+#define SEGMENT_MIDDLE_RIGHT 0x80
+#define SEGMENT_BOTTOM 0x100
+#define SEGMENT_BOTTOM_LEFT 0x200
+#define SEGMENT_BOTTOM_LEFT_DIAGONAL 0x400
+#define SEGMENT_BOTTOM_RIGHT 0x800
+#define SEGMENT_BOTTOM_RIGHT_DIAGONAL 0x1000
+#define SEGMENT_BOTTOM_VERTICAL 0x2000
 
+// Short hand segment definitions.
+#define SEG_T 0x1
+#define SEG_TL 0x2
+#define SEG_TLD 0x4
+#define SEG_TR 0x8
+#define SEG_TRD 0x10
+#define SEG_TV 0x20
+#define SEG_ML 0x40
+#define SEG_MR 0x80
+#define SEG_B 0x100
+#define SEG_BL 0x200
+#define SEG_BLD 0x400
+#define SEG_BR 0x800
+#define SEG_BRD 0x1000
+#define SEG_BV 0x2000
 
 typedef enum
 {
@@ -127,6 +157,13 @@ public:
      * @prarm lower_on if true,the second point light on ,otherwise turn off; 
      * */
     void setPoint(bool first_dot,bool second_dot);
+    
+    /**@brief Set the values of tube_num's segments.
+     * @param tube_num The number of tube, depending on the device you are using (2 or 4).
+     * @prarm segments The segments that should be turned on. 
+     * */
+    void setTubeSegments(TubeNum tube_num,uint16_t segments);
+    
 private:
     void display_one_tube(TubeNum tube_num,uint16_t value);
     void replace_bit12(TubeNum tube_num,bool bit1,bool bit2);

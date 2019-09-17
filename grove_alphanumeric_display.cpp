@@ -129,6 +129,8 @@ uint16_t g_display_font2[]={
     0x0000,                 // ilegal num
 };
 
+uint16_t segments4Tubes[] = {0x10,0x4000,0x80,0x40,0x2,0x2000,0x200,0x100,0x400,0x8,0x1000,0x20,0x4,0x800};
+uint16_t segments2Tubes[] = {0x4,0x40,0x20,0x1,0x8,0x10,0x2,0x1000,0x2000,0x100,0x200,0x8000,0x800,0x400};
 
 Seeed_Digital_Tube::Seeed_Digital_Tube()
 {
@@ -316,6 +318,37 @@ void Seeed_Digital_Tube::setPoint(bool first_dot,bool second_dot)
     else{}
 }
 
+void Seeed_Digital_Tube::setTubeSegments(TubeNum tube_num,uint16_t segments)
+{
+    uint16_t value = 0;
+  
+    if( TYPE_4 == _type )
+    {
+        for (int i=0; i<16; i++) {
+          if (bitRead(segments, i) == 1) {
+            value += segments4Tubes[i];
+          }
+        }
+        
+        _buffer[tube_num*2] = value;
+        _buffer[tube_num*2+1] = value >> 8;
+        replace_bit12(tube_num,value&0x02,value&0x04);
+    }
+    else if (TYPE_2 == _type)
+    {  
+        for (int i=0; i<16; i++) {
+          if (bitRead(segments, i) == 1) {
+            value += segments2Tubes[i];
+          }
+        }
+      
+        // Set tube_num to 1 if it's 2, and 2 if it's 1, so that it's compatible with the hardware.
+        tube_num = (TubeNum) (((int)tube_num+1) & (~(int)tube_num));
+      
+        _buffer[tube_num*2] = value >> 8;
+        _buffer[tube_num*2+1] = value;
+    }
+}
 
 void Seeed_Digital_Tube::setTubeBuf(TubeNum tube_num,char byte)
 {
