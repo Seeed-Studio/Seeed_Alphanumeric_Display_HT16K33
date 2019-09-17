@@ -18,7 +18,10 @@ or
 ```
 * The example : < combine_two_displays.ino > shows how to combine two displays in one project.
 
+### setTubeSegments(TubeNum tube_num,uint16_t segments)
+You can set specific segments of the display on or off by adding together segment values (eg. SEGMENT_TOP + SEGMENT_BOTTOM). The example : < display_specific_segments.ino > shows how to do this. The following image shows the names of the segments (color coded).
 
+<img src="https://github.com/dagwoodland/Seeed_Alphanumeric_Display_HT16K33/blob/master/CustomSegmentGuide.png" alt="CustomSegmentGuide.png" width="300px">
 
 ***
 
