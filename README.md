@@ -1,4 +1,4 @@
-# Grove - alphanumeric Digital Tubes Display
+# Grove - alphanumeric Digital Tubes Display  [![Build Status](https://travis-ci.com/Seeed-Studio/Seeed_Alphanumeric_Display_HT16K33.svg?branch=master)](https://travis-ci.com/Seeed-Studio/Seeed_Alphanumeric_Display_HT16K33)
 
 ***  
 
