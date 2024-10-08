@@ -47,6 +47,7 @@ bool HT16K33::writeBytes(uint8_t devAddr, uint8_t regAddr, uint8_t length, uint8
         Wire.write((uint8_t) data[i]);
     }
     Wire.endTransmission();
+    return true;
 }
 
 
